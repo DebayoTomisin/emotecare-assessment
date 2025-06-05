@@ -1,54 +1,65 @@
-# React + TypeScript + Vite
+- **Brief README.md:** Include the following in your `README.md`:
+  - Clear setup and running instructions.
+  - Brief explanation of your architecture and design decisions (e.g., why you chose a particular state management solution or component structure).
+  - Any known issues, limitations, or assumptions made.
+  - A list of any bonus features you attempted or completed.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+🧠 Architecture & Design Decisions
+🗂 Component Structure
+calendar/: Contains the core MonthView, WeekView, and DayView calendar components.
+events-modal/: Contains the modal and events form.
+calendar-header/: Contains the controls and headings shown on the top of the application
 
-Currently, two official plugins are available:
+store/: Contains global state using Zustand, split into useCalendarStore and useEventStore.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+🧰 State Management
+Chose Zustand for its lightweight, intuitive API and non-opinionated structure, ideal for a small but scalable global state need (date and event management).
 
-## Expanding the ESLint configuration
+Used useCalendarStore for tracking currentDate and selected view.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Used useEventStore to handle CRUD operations for events (with crypto.randomUUID() as temporary ID generation).
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+💅 Styling
+TailwindCSS was used for rapid UI styling with mobile-first responsiveness.
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+All views are designed to:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Maintain consistent grid sizing.
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+Remain scrollable while keeping grid items large enough for usability on mobile.
+
+🧩 Modal Management
+A central EventModal component is reused for both create and edit workflows.
+
+Modal visibility and selected event state are managed locally within each view.
+
+⚠️ Known Issues & Assumptions
+No Backend: All event data is stored in-memory using Zustand. A refresh will reset the state.
+
+No Authentication: The app is purely client-side for demonstration purposes.
+
+No Drag & Drop or Resize: These features are planned but not implemented.
+
+No Time Selection UI: Events are created with the full-day assumption unless edited.
+
+🎁 Bonus Features
+✅ Dynamic Modal for event creation and editing.
+
+✅ Responsive Grid that scrolls on smaller viewports.
+
+✅ Expandable Events with a "+X more" reveal inside date cells.
+
+✅ "Today" Highlighting for visual orientation.
+
+✅ Current Month Differentiation (faded cells for overflow days).
+
+✅ Programmatic Modal Triggering from an external CreateEventButton.
+
+📦 Tech Stack
+React + TypeScript
+
+Zustand – Global state for date and events
+
+TailwindCSS – Utility-first styling
+
+date-fns – Lightweight date manipulation
