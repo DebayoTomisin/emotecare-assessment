@@ -40,7 +40,9 @@ export default function EventForm({ defaultValues, onSubmit }: Props) {
           className="mt-1 w-full rounded-md border px-3 py-2 text-sm shadow-sm"
         />
         {errors.title && (
-          <p className="text-xs text-red-600 mt-1">{errors.title.message}</p>
+          <p className="text-xs text-red-600 mt-1">
+            {String(errors.title.message)}
+          </p>
         )}
       </div>
 
@@ -61,7 +63,9 @@ export default function EventForm({ defaultValues, onSubmit }: Props) {
           className="mt-1 w-full rounded-md border px-3 py-2 text-sm shadow-sm"
         />
         {errors.end && (
-          <p className="text-xs text-red-600 mt-1">{errors.end.message}</p>
+          <p className="text-xs text-red-600 mt-1">
+            {String(errors.end.message)}
+          </p>
         )}
       </div>
 

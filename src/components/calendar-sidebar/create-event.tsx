@@ -7,7 +7,7 @@ import { EventFormData } from "@/schema";
 
 export const CreateEventButton = () => {
   const currentDate = useCalendarStore((s) => s.currentDate);
-  const { updateEvent } = useEventStore();
+  const { addEvent } = useEventStore();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -23,7 +23,7 @@ export const CreateEventButton = () => {
     title: "",
     description: "",
     start: currentDate,
-    end: new Date(currentDate.getTime() + 60 * 60 * 1000), // 1 hour after
+    end: new Date(currentDate.getTime() + 60 * 60 * 1000),
   };
 
   return (
@@ -47,7 +47,7 @@ export const CreateEventButton = () => {
             start: new Date(data.start),
             end: new Date(data.end),
           };
-          updateEvent(payload);
+          addEvent(payload);
           closeModal();
         }}
       />
