@@ -18,11 +18,11 @@ const HomePage = () => {
   return (
     <main className="relative overflow-hidden">
       <CalendarHeader />
-      <div className="flex">
-        <div className="w-[15%]">
+      <div className="flex gap-4">
+        <div className="w-1/6">
           <CalendarSideLayout />
         </div>
-        <div className="w-full overflow-scroll">
+        <div className="w-full md:w-5/6 overflow-scroll">
           {isLoading ? (
             <h1 className="text-center ">Loading...</h1>
           ) : (
