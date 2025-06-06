@@ -20,7 +20,7 @@ export const ViewSelector = () => {
           {view.charAt(0).toUpperCase() + view.slice(1)}
           <ChevronDown className="w-4 h-4" />
         </ListboxButton>
-        <ListboxOptions className="absolute z-10 mt-1 w-full bg-white border rounded-md shadow">
+        <ListboxOptions className="absolute z-90 mt-1 w-full bg-white border rounded-md shadow">
           {views.map((v) => (
             <ListboxOption
               key={v}

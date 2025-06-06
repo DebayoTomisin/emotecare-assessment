@@ -16,11 +16,13 @@ const HomePage = () => {
   }, [data, setEvents]);
 
   return (
-    <main className="relative">
+    <main className="relative overflow-hidden">
       <CalendarHeader />
       <div className="flex">
-        <CalendarSideLayout />
-        <div className="w-full">
+        <div className="w-[15%]">
+          <CalendarSideLayout />
+        </div>
+        <div className="w-full overflow-scroll">
           {isLoading ? (
             <h1 className="text-center ">Loading...</h1>
           ) : (

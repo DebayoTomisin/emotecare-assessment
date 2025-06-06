@@ -6,9 +6,7 @@ import {
   addDays,
   isSameMonth,
   isToday,
-  isSameDay,
   format,
-  parseISO,
 } from "date-fns";
 import { useCalendarStore } from "@/store/useCalendarStore";
 import clsx from "clsx";
@@ -68,87 +66,93 @@ export const MonthView = () => {
 
   return (
     <>
-      <div className="grid grid-cols-7 border-t text-sm sm:text-base">
-        {/* Day Labels */}
-        {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((label) => (
-          <div
-            key={label}
-            className="px-2 py-2 bg-gray-50 font-medium text-center border-b"
-          >
-            {label}
-          </div>
-        ))}
+      {/* Horizontal scroll container */}
+      <div className="overflow-x-auto">
+        <div className="min-w-[900px] md:min-w-0">
+          <div className="grid grid-cols-7 border-t text-sm">
+            {/* Day Labels */}
+            {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((label) => (
+              <div
+                key={label}
+                className="px-2 py-2 bg-gray-50 font-medium text-center border-b min-w-[120px]"
+              >
+                {label}
+              </div>
+            ))}
 
-        {days.map((date) => {
-          const dayEvents = events.filter((event) => {
-            const eventDate = new Date(event.start);
-            return (
-              eventDate.getFullYear() === date.getFullYear() &&
-              eventDate.getMonth() === date.getMonth() &&
-              eventDate.getDate() === date.getDate()
-            );
-          });
+            {days.map((date) => {
+              const dayEvents = events.filter((event) => {
+                const eventDate = new Date(event.start);
+                return (
+                  eventDate.getFullYear() === date.getFullYear() &&
+                  eventDate.getMonth() === date.getMonth() &&
+                  eventDate.getDate() === date.getDate()
+                );
+              });
 
-          return (
-            <div
-              key={date.toISOString()}
-              onClick={(e) => {
-                if ((e.target as HTMLElement).dataset.eventId) return;
-                openCreateModal(date);
-              }}
-              className={clsx(
-                "h-24 sm:h-32 border p-1 sm:p-2 relative group transition cursor-pointer",
-                !isSameMonth(date, currentDate) && "bg-gray-50 text-gray-400",
-                isToday(date) && "border-blue-500"
-              )}
-            >
-              <span className="absolute top-1 right-2 text-xs">
-                {format(date, "d")}
-              </span>
+              return (
+                <div
+                  key={date.toISOString()}
+                  onClick={(e) => {
+                    if ((e.target as HTMLElement).dataset.eventId) return;
+                    openCreateModal(date);
+                  }}
+                  className={clsx(
+                    "h-24 sm:h-32 border p-1 sm:p-2 relative group transition cursor-pointer min-w-[120px]",
+                    !isSameMonth(date, currentDate) &&
+                      "bg-gray-50 text-gray-400",
+                    isToday(date) && "border-blue-500"
+                  )}
+                >
+                  <span className="absolute top-1 right-2 text-xs">
+                    {format(date, "d")}
+                  </span>
 
-              <div className="space-y-0.5 mt-5">
-                {dayEvents.slice(0, 2).map((event) => (
-                  <button
-                    key={event.id}
-                    data-event-id={event.id}
-                    onClick={() => openEditModal(event)}
-                    className="truncate rounded bg-blue-500 text-white text-xs px-1 py-0.5 text-left w-full"
-                    title={event.title}
-                  >
-                    {event.title}
-                  </button>
-                ))}
+                  <div className="space-y-0.5 mt-5">
+                    {dayEvents.slice(0, 2).map((event) => (
+                      <button
+                        key={event.id}
+                        data-event-id={event.id}
+                        onClick={() => openEditModal(event)}
+                        className="truncate rounded bg-blue-500 text-white text-xs px-1 py-0.5 text-left w-full"
+                        title={event.title}
+                      >
+                        {event.title}
+                      </button>
+                    ))}
 
-                {dayEvents.length > 2 && (
-                  <div className="relative">
-                    <button
-                      data-event-id="expand"
-                      onClick={() => toggleExpanded(date)}
-                      className="text-xs text-blue-600 mt-1"
-                    >
-                      +{dayEvents.length - 2} more
-                    </button>
+                    {dayEvents.length > 2 && (
+                      <div className="relative">
+                        <button
+                          data-event-id="expand"
+                          onClick={() => toggleExpanded(date)}
+                          className="text-xs text-blue-600 mt-1"
+                        >
+                          +{dayEvents.length - 2} more
+                        </button>
 
-                    {isExpanded(date) && (
-                      <div className="absolute z-10 top-full mt-1 bg-white shadow-md border rounded w-48 p-2 space-y-1">
-                        {dayEvents.slice(2).map((event) => (
-                          <button
-                            key={event.id}
-                            data-event-id={event.id}
-                            onClick={() => openEditModal(event)}
-                            className="block text-left text-sm w-full hover:bg-gray-100 rounded px-2 py-1"
-                          >
-                            {event.title}
-                          </button>
-                        ))}
+                        {isExpanded(date) && (
+                          <div className="absolute z-10 top-full mt-1 bg-white shadow-md border rounded w-48 p-2 space-y-1 left-0">
+                            {dayEvents.slice(2).map((event) => (
+                              <button
+                                key={event.id}
+                                data-event-id={event.id}
+                                onClick={() => openEditModal(event)}
+                                className="block text-left text-sm w-full hover:bg-gray-100 rounded px-2 py-1"
+                              >
+                                {event.title}
+                              </button>
+                            ))}
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>
-                )}
-              </div>
-            </div>
-          );
-        })}
+                </div>
+              );
+            })}
+          </div>
+        </div>
       </div>
 
       <EventModal
@@ -159,7 +163,6 @@ export const MonthView = () => {
           const isEdit = !!selectedEvent?.id;
           const payload = {
             id: selectedEvent?.id || crypto.randomUUID(),
-
             ...data,
           };
 

@@ -47,59 +47,69 @@ export default function WeekView() {
 
   return (
     <>
-      <div className="grid grid-cols-[60px_repeat(7,_1fr)] text-xs sm:text-sm h-[calc(100vh-80px)] overflow-auto border-t relative">
-        <div className="bg-gray-100 border-r" />
-        {days.map((date) => (
-          <div
-            key={date.toISOString()}
-            className={clsx(
-              "border-b border-r py-2 px-1 text-center bg-gray-50 font-medium sticky top-0 z-10",
-              isToday(date) && "bg-blue-50 text-blue-600"
-            )}
-          >
-            {format(date, "EEE dd")}
-          </div>
-        ))}
-
-        {HOURS.map((hour) => (
-          <React.Fragment key={hour}>
-            <div className="border-r border-t px-1 py-2 text-right text-gray-500 bg-white sticky left-0 z-10">
-              {format(setHours(startOfDay(new Date()), hour), "haaa")}
-            </div>
-
-            {days.map((date) => {
-              const slotStart = setHours(startOfDay(date), hour);
-              const slotEnd = setHours(startOfDay(date), hour + 1);
-
-              const slotEvents = events.filter((event) => {
-                const eventStart = new Date(event.start);
-                return eventStart >= slotStart && eventStart < slotEnd;
-              });
-
-              return (
-                <div
-                  key={date.toISOString() + hour}
-                  className="border-r border-t h-16 sm:h-20 relative cursor-pointer hover:bg-blue-50 transition"
-                  onClick={() => handleCellClick(date, hour)}
-                >
-                  {slotEvents.map((event, index) => (
-                    <div
-                      key={event.id}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleEventClick(event);
-                      }}
-                      className="absolute top-1 left-1 right-1 bg-blue-600 text-white text-xs px-1 py-0.5 rounded z-10"
-                      style={{ top: index * 20 }}
-                    >
-                      {event.title}
-                    </div>
-                  ))}
+      {/* Horizontal scroll container */}
+      <div className="overflow-x-auto">
+        <div className="min-w-[700px] lg:min-w-0">
+          <div className="grid grid-cols-[80px_repeat(7,_minmax(90px,_1fr))] text-xs sm:text-sm h-[calc(100vh-80px)] overflow-auto border-t relative">
+            <div className="bg-gray-100 border-r" />
+            {days.map((date) => (
+              <div
+                key={date.toISOString()}
+                className={clsx(
+                  "border-b border-r py-3 px-2 text-center bg-gray-50 font-medium sticky top-0 z-10 min-w-[90px]",
+                  isToday(date) && "bg-blue-50 text-blue-600"
+                )}
+              >
+                <div className="text-sm sm:text-base font-semibold">
+                  {format(date, "EEE")}
                 </div>
-              );
-            })}
-          </React.Fragment>
-        ))}
+                <div className="text-lg sm:text-xl font-bold mt-1">
+                  {format(date, "dd")}
+                </div>
+              </div>
+            ))}
+
+            {HOURS.map((hour) => (
+              <React.Fragment key={hour}>
+                <div className="border-r border-t px-2 py-3 text-right text-gray-500 bg-white sticky left-0 z-10 text-xs sm:text-sm">
+                  {format(setHours(startOfDay(new Date()), hour), "haaa")}
+                </div>
+
+                {days.map((date) => {
+                  const slotStart = setHours(startOfDay(date), hour);
+                  const slotEnd = setHours(startOfDay(date), hour + 1);
+
+                  const slotEvents = events.filter((event) => {
+                    const eventStart = new Date(event.start);
+                    return eventStart >= slotStart && eventStart < slotEnd;
+                  });
+
+                  return (
+                    <div
+                      key={date.toISOString() + hour}
+                      className="border-r border-t h-20 sm:h-24 relative cursor-pointer hover:bg-blue-50 transition min-w-[90px]"
+                      onClick={() => handleCellClick(date, hour)}
+                    >
+                      {slotEvents.map((event, index) => (
+                        <div
+                          key={event.id}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleEventClick(event);
+                          }}
+                          className="absolute top-1 left-1 right-1 bg-blue-600 text-white text-xs sm:text-sm px-2 py-1 rounded z-10 min-h-[24px] flex items-center"
+                          style={{ top: 4 + index * 28 }}
+                        >
+                          <span className="truncate">{event.title}</span>
+                        </div>
+                      ))}
+                    </div>
+                  );
+                })}
+              </React.Fragment>
+            ))}
+          </div>
+        </div>
       </div>
 
       <EventModal
